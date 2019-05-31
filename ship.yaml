@@ -1,0 +1,74 @@
+assets:
+  v1:
+    - github:
+          repo: hazelcast/charts
+          path: stable/hazelcast
+          strip_path: true
+          dest: ./chart
+          ref: master
+
+config:
+  v1: []
+lifecycle:
+  v1:
+    - message:
+        contents: |
+          ## Hazelcast
+
+          [Hazelcast IMDG](http://hazelcast.com/) is the most widely used in-memory data grid with hundreds of thousands of installed clusters around the world. It offers caching solutions ensuring that data is in the right place when it’s needed for optimal performance.
+
+          This chart bootstraps a [Hazelcast](https://github.com/hazelcast/hazelcast-docker/tree/master/hazelcast-kubernetes) and [Management Center](https://github.com/hazelcast/management-center-docker) deployments on a [Kubernetes](http://kubernetes.io) cluster using [Ship](https://github.com/replicatedhq/ship).
+
+          ### Prerequisites
+
+          - Kubernetes 1.9+
+
+    - render:
+        root: .
+    - helmIntro: {}
+    - helmValues:
+        path: chart/values.yaml
+    - render:
+        root: .
+        assets:
+          v1:
+            - helm:
+                dest: base/
+                helm_opts:
+                  - --namespace=hazelcast
+                  - --name=hazelcast
+                local:
+                  chart_root: ./chart
+                values_from:
+                  path: .ship/tmp
+    - kustomizeIntro: {}
+    - kustomize:
+        base: base
+        overlay: overlays/ship
+        dest: hazelcast-all.yaml
+    - message:
+        contents: |
+          ## All set
+
+          You can deploy Hazelcast IMDG to your cluster with
+
+              kubectl apply -f hazelcast-all.yaml
+
+          or, if you have Kubernetes 1.14 or greater, you can use
+
+              kubectl apply -k overlays/ship
+
+
+          ## Updates
+
+          Ship can now watch for any changes made to the application, and can download them, apply your patches, and create an updated version of the rendered.yaml. To watch for updates:
+
+              ship watch && ship update
+
+          Running this command in the current directory will automate the process of downloading and preparing updates. You can create a full CD pipeline for Hazelcast with
+
+              ship watch && ship update && kubectl apply -f hazelcast-all.yaml
+
+          For continuous notification and preparation of application updates via email, webhook or automated pull request, create a free account at https://ship.replicated.com.
+
+
