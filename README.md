@@ -1,5 +1,7 @@
-Hazelcast Manager
+Hazelcast
 ===========
+
+<a target="_blank" href="https://replicated.com/watch/create/init?upstream=github.com%2Fshipapps%2Fhazelcast"><img height="30" src="https://www.replicated.com/images/ship/oss/dws-green.svg" alt="Deploy with Ship"></a><br>
 
 This ship app provides a workflow for configuring [Hazelcast IMDG](https://hazelcast.com).
 
